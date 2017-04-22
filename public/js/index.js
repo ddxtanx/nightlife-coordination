@@ -33,7 +33,8 @@ function setPeopleGoing(){
                 if(peopleGoing.includes(username)){
                     $(buttonName).attr("doing", "removing");
                 } else if(username==""){
-                    $(buttonName).prop("disabled", true);
+                    $(buttonName).html("<a href='/login'>PLEASE LOGIN TO GO TO BARS</a>");
+                    $(".bar-button").off('click');
                 }
             }
         })

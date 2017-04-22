@@ -70,6 +70,7 @@ function login(req, res){
                req.session.active = true;
                req.session.email = data[0].email;
                req.session.name = data[0].name;
+               req.session.justLoggedIn = true;
                res.redirect("/");
                res.end();
                db.close();

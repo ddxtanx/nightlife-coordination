@@ -16,10 +16,17 @@ app.use(express.static('./public'), bodyParser(), session({
 }));
 
 app.get("/", function(req, res){
-    res.render("twig/index.twig", {loggedin: req.session.active, name: req.session.name});
+    if(req.session.justLoggedIn){
+        req.session.justLoggedIn=false;
+        console.log("just logging in");
+        res.render("twig/index.twig", {loggedin: req.session.active, name: req.session.name, city: req.session.city});
+    }else{
+        res.render("twig/index.twig", {loggedin: req.session.active, name: req.session.name});
+    }
 });
 app.post("/api/bars", function(req, res){
     var city = req.body.city;
+    req.session.city = city;
     bars.getBars(city, req, res);
 });
 app.post("/api/people", function(req, res){
@@ -62,6 +69,7 @@ app.post("/login", function(req,res){
 app.get("/logout", function(req, res){
    req.session.reset();
    req.session.active = false;
+   req.session.justLoggedIn=false;
    res.redirect("/");
    res.end();
 });
