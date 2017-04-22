@@ -41,53 +41,92 @@ function getPeople(name, req, res){
                 var object = {
                     name: name,
                     numPeopleGoing: 0,
+                    peopleGoing: []
                 }
                 res.end(JSON.stringify(object));
             }else{
                 data = data[0];
                 res.writeHead(200, {'Content-Type': 'text/json'})
+                db.close();
                 res.end(JSON.stringify(data));
             }
         })
     })
 }
+function handleRequest(name, increment, req, res){
+    mongo.connect(mongoUri, function(err, db){
+        if(err) throw err;
+        var bars = db.collection('bars');
+        bars.find({
+            name: name
+        }).toArray(function(err, data){
+            if(err) throw err;
+            if(data.length==0){
+                add(name, req, res);
+            } else{
+                addTo(name, increment, req, res);
+            }
+        });
+    });
+}
 function add(name, req, res){
-    var name = req.session.name;
+    var userName = req.session.name;
     mongo.connect(mongoUri, function(err, db){
         if(err) throw err;
         var bars = db.collection('bars');
         var data = {
             name: name,
             numPeopleGoing: 1,
-            peopleGoing
-        }
+            peopleGoing: [userName]
+        };
         bars.insert(data, function(err, data){
             if(err) throw err;
             console.log("insert success"+ JSON.stringify(data));
             res.writeHead(200, {'Content-Type': 'text/json'});
+            db.close();
             res.end(JSON.stringify(data));
         });
     });
 }
-function addTo(name, req, res){
+function addTo(name, increment, req, res){
+    var userName = req.session.name;
     mongo.connect(mongoUri, function(err, db){
         if(err) throw err;
         var bars = db.collection('bars');
+        var updateObject;
+        if(increment==1){
+            updateObject= {
+                $inc: {
+                    numPeopleGoing: increment
+                },
+                $push: {
+                    peopleGoing: userName
+                }
+            };
+        }else{
+            updateObject= {
+                $inc: {
+                    numPeopleGoing: increment
+                },
+                $pull: {
+                    peopleGoing: userName
+                }
+            };
+        }
         bars.update({
             name:name
-        },{
-            $inc: {
-                numPeopleGoing: 1
-            }
-        }, function(err, data){
+        },updateObject, function(err, data){
             if(err) throw err;
             console.log(JSON.stringify(data));
             res.writeHead(200, {'Content-Type': 'text/json'});
+            db.close();
             res.end(JSON.stringify(data));
-        })
-    })
+        });
+    });
 }
+
 module.exports.getBars = getBars;
 module.exports.getPeople = getPeople;
 module.exports.add = add;
 module.exports.addTo = addTo;
+module.exports.handleRequest = handleRequest;

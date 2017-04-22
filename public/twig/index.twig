@@ -6,10 +6,19 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="/css/index.css">
+        <link rel="stylesheet" href="/css/navbar.css">
         <script src="/js/index.js"></script>
+        <script>
+        {%if loggedin==true%}
+            var username = "{{name}}";
+        {%else%}
+            var username = "";
+        {%endif%}
+        </script>
     </head>
     <body>
         <div id="page-content">
+            {% include 'twig/navbar.twig' %}
             <div id="top-content">
                 <h1 id="page-title">Got Plans?</h1>
                 <h1> Go with the flow, and be where everyone else is! </h2>

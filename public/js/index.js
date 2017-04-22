@@ -1,12 +1,17 @@
 Object.prototype.hasOwnProperty = function(property) {
     return typeof this[property] !== 'undefined';
 };
-function updateButton(button){
+function updateButton(button, inc){
     var past = button.attr('people-going');
     past = parseInt(past);
-    var now = past+1;
+    var now = past+inc;
     button.attr('people-going', now);
     button.text(now+" People Going");
+    if(inc==1){
+        button.attr('doing', 'removing');
+    }else{
+        button.attr('doing', 'adding');
+    }
 }
 function setPeopleGoing(){
     var bars = $(".bar");
@@ -21,41 +26,47 @@ function setPeopleGoing(){
             },
             success: function(data){
                 var people = data.numPeopleGoing;
+                var peopleGoing = data.peopleGoing;
                 var buttonName = ".bar-button[for-bar='"+data.name+"']";
                 $(buttonName).text(people+" People Going");
                 $(buttonName).attr("people-going", people);
+                if(peopleGoing.includes(username)){
+                    $(buttonName).attr("doing", "removing");
+                } else if(username==""){
+                    $(buttonName).prop("disabled", true);
+                }
             }
         })
     }
 }
-function createBar(name){
+function createBar(name, inc){
     $.ajax({
         type: 'POST',
         url:"/api/go",
         data:{
-            adding: true,
-            name: name
+            name: name,
+            increment: inc
         },
         success: function(){
             var button = $(".bar-button[for-bar='"+name+"']")
-            updateButton(button);
+            updateButton(button, inc);
         },
         error: function(){
             
         }
     })
 }
-function addToBar(name){
+function addToBar(name, inc){
     $.ajax({
         type: 'POST',
         url:"/api/go",
         data:{
-            adding: false,
-            name: name
+            name: name,
+            increment: inc
         },
         success: function(){
             var button = $(".bar-button[for-bar='"+name+"']")
-            updateButton(button);
+            updateButton(button, inc);
         },
         error: function(){
             
@@ -89,7 +100,7 @@ $(document).ready(function(){
                   }
                   var htmlImage = "<img class='bar-image' src='"+image+"' height='100px' width='100px'></img>";
                   var htmlName = "<h4 class='bar-name'> <a href='"+url+"'>"+name+"</a></h4>";
-                  var goButton = "<button type='button' for-bar='"+name+"' people-going='0' class='bar-button'> 0 People Going</button>";
+                  var goButton = "<button type='button' doing='adding' for-bar='"+name+"' people-going='0' class='bar-button'> 0 People Going</button>";
                   var htmlTags = "<p class='bar-tags'>"+tagsText+"</p>"
                   var barDiv = "<div id='bar"+x+"' for-bar='"+name+"' class='bar'>"+htmlImage+htmlName+goButton+"<br/><br/>"+htmlTags+"</div>";
                   $("#bars").append(barDiv);
@@ -97,11 +108,13 @@ $(document).ready(function(){
                 $(".bar-button").click(function(){
                     var name = $(this).attr("for-bar");
                     var peopleGoing = $(this).attr("people-going");
+                    var doing = $(this).attr("doing");
+                    var inc = (doing=="adding")?1:-1;
                     console.log("Ready to go?");
                     if(peopleGoing==0){
-                        createBar(name);
+                        createBar(name, inc);
                     }else{
-                        addToBar(name);
+                        addToBar(name, inc);
                     }
                 });
               setPeopleGoing();

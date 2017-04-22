@@ -1,0 +1,13 @@
+body{
+     background: #6e3b9a;
+}
+body *{
+    color: white;
+    text-align:center;
+}
+#logForm input:not([type="submit"]){
+    color:black;
+}
+#logTitle{
+    font-size: 3.5em;
+}
