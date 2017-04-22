@@ -20,3 +20,23 @@ body *{
 #location{
     width:70%;
 }
+#bars{
+    text-align:center;
+    width:70%;
+    padding-left: 15%;
+}
+.bar *{
+    float: left;
+}
+.bar-image{
+}
+.bar{
+    padding-bottom:90px;
+}
+.bar-name{
+}
+.bar-button{
+    background-color: Transparent;
+    border: 1px solid white;
+    border-radius:5px;
+}
