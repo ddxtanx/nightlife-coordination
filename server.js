@@ -1,0 +1,1 @@
+var mongoURI = "mongodb://testing:thisout@host.host.com:11872/database";

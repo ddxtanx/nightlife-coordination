@@ -1,0 +1,24 @@
+{
+  "name": "nightlife-coordination",
+  "version": "1.0.0",
+  "description": "Corrdination app for Free Code Camp",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddxtanx/nightlife-coordination.git"
+  },
+  "author": "Garrett Credi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ddxtanx/nightlife-coordination/issues"
+  },
+  "homepage": "https://github.com/ddxtanx/nightlife-coordination#readme",
+  "dependencies": {
+    "express": "^4.15.2",
+    "mongodb": "^2.2.26"
+  }
+}
