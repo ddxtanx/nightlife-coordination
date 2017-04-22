@@ -1,0 +1,22 @@
+body{
+     background: #6e3b9a;
+}
+body *{
+    color: white;
+}
+#top-content{
+    text-align:center;
+}
+#page-title{
+    font-size:5em;
+    padding-top:2em;
+}
+#search *{
+    background-color: Transparent;
+    border: 1px white solid;
+    border-radius:5px;
+    height:3em;
+}
+#location{
+    width:70%;
+}
