@@ -4,17 +4,22 @@ var express = require('express'),
     session = require('client-sessions'),
     acc = require('./app/account.js');
 var app = express();
-var user = process.env.USER
-var password = process.env.PASSWORD
 
 app.set('views', './public');
 app.use(express.static('./public'), bodyParser(), session({
   cookieName: 'session',
   secret: process.env.SESSION_SECRET,
   duration: 30 * 60 * 1000,
-  activeDuration: 5 * 60 * 1000,
+  activeDuration: 30 * 60 * 1000,
 }));
-
+app.get("/*", function(req, res, next){
+    if(req.session.active==undefined){
+        req.session.destroy();
+        req.session.active = false;
+        req.session.justLoggedIn = false;
+    }
+    next();
+});
 app.get("/", function(req, res){
     if(req.session.justLoggedIn){
         req.session.justLoggedIn=false;
